@@ -19,7 +19,12 @@ router.post("/", async (req, res) => {
 
   if(isValidMessage(maybeMessage)) {
     await db.read()
-
+    maybeMessage.id = generateRandomId()
+    db.data.public.push(maybeMessage)
+    await db.write()
+    res.send({ id: maybeMessage.id })
+  } else {
+    res.sendStatus(400)
   }
 
 })

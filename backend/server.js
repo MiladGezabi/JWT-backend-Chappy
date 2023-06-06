@@ -4,12 +4,13 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import PublicRouter from "./routes/public.js"
+import UsersRouter from "./routes/users.js"
 
 // konfigurationer.
 const app = express()
 dotenv.config()
 const port = process.env.PORT || 5995
-const secret = process.env.SECRET || 'very secret secret'
+
 
 // middlewares.
 app.use( cors() )
@@ -21,7 +22,10 @@ app.use((req, res, next) => {
 }) 
 
 // routes.
-app.use("/api", PublicRouter)
+app.use("/api/public", PublicRouter)
+app.use("/api/users", UsersRouter)
+app.use("/api/private", PrivateRouter)
+
 
 //init
 app.listen(port, () => {
