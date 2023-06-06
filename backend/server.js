@@ -3,6 +3,7 @@ import express from "express"
 import cors from 'cors'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
+import PublicRouter from "./routes/public.js"
 
 // konfigurationer.
 const app = express()
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
 }) 
 
 // routes.
-app.use("/api", )
+app.use("/api", PublicRouter)
 
 //init
 app.listen(port, () => {
