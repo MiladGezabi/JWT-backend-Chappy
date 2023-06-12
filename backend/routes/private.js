@@ -9,14 +9,14 @@ const db = getDb()
 dotenv.config()
 const secret = process.env.SECRET || 'very secret secret'
 
-// post login.
-router.post("/login", (req, res) => {
+// post login, kollar om personen finns i databasen och granskar att både användarnamn och lössenord stämmer sedan skapar den och skickar en jwt till användaren.
+router.post("/login", async (req, res) => {
   if( !req.body || !req.body.username || !req.body.password ) {
     res.sendStatus(400)
     return
   }
   const { username, password } = req.body
-  db.read()
+  await db.read()
   let users = db.data.users
 
   let found = users.find(user => user.username === username)
@@ -40,6 +40,105 @@ router.post("/login", (req, res) => {
   let tokenPackage = { token: token}
   res.send(tokenPackage)
 } )
+
+// Get kollar om man är inloggad och hämtar all medelanden från privata kanalen.
+router.get('/', async (req, res) => {
+	let authHeader = req.headers.authorization
+	if( !authHeader ) {
+		res.status(401).send({
+			message: 'You dont must log in to get access to this chat.'
+		})
+		return
+	}
+	let token = authHeader.replace('Bearer: ', '')
+  await db.read()
+  let users = db.data.users
+
+	try {
+		let jwtDecoded = jwt.verify(token, secret)
+		let userId = jwtDecoded.userId
+		let user = users.find(u => u.id === userId)
+		console.log(`User "${user.username}" has access to secret data.`)
+		
+		
+		res.send(db.data.private)
+
+	} catch(error) {
+		res.sendStatus(401)
+	}
+})
+
+// Post Kollar om det är rätt user och rätt body sedan läggs medelande till private i data basen med två nya egenskaper som är name och id.
+router.post("/", async (req, res) => {
+  let authHeader = req.headers.authorization
+	if( !authHeader ) {
+		res.status(401).send({
+			message: 'You dont must log in to get access to this chat.'
+		})
+		return
+	}
+	let token = authHeader.replace('Bearer: ', '')
+  await db.read()
+  let users = db.data.users
+
+	try {
+		let jwtDecoded = jwt.verify(token, secret)
+		let userId = jwtDecoded.userId
+		let user = users.find(u => u.id === userId)
+		console.log(`User "${user.username}" has access to secret data.`)
+
+    let maybeMessage = req.body
+		
+    if(isValidMessage(maybeMessage)) {
+      await db.read()
+      maybeMessage.id = generateRandomId()
+      maybeMessage.name = user.username
+      db.data.public.push(maybeMessage)
+      await db.write()
+      res.send({ id: maybeMessage.id })
+    } else {
+      res.sendStatus(400)
+    }
+	} catch(error) {
+		res.sendStatus(401)
+	}
+})
+
+
+router.put("/", async (req, res) => {
+  let authHeader = req.headers.authorization
+	if( !authHeader ) {
+		res.status(401).send({
+			message: 'You dont must log in to get access to this chat.'
+		})
+		return
+	}
+	let token = authHeader.replace('Bearer: ', '')
+  await db.read()
+  let users = db.data.users
+
+	try {
+		let jwtDecoded = jwt.verify(token, secret)
+		let userId = jwtDecoded.userId
+		let user = users.find(u => u.id === userId)
+		console.log(`User "${user.username}" has access to secret data.`)
+
+    let maybeMessage = req.body
+		
+    if(isValidMessage(maybeMessage)) {
+      await db.read()
+      maybeMessage.id = generateRandomId()
+      maybeMessage.name = user.username
+      db.data.public.push(maybeMessage)
+      await db.write()
+      res.send({ id: maybeMessage.id })
+    } else {
+      res.sendStatus(400)
+    }
+	} catch(error) {
+		res.sendStatus(401)
+	}
+})
 
 
 

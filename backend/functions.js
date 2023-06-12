@@ -14,6 +14,7 @@ function isValidMessage(m) {
   return true;
 }
 
+
 // funktion som kollar om id är giltig.
 function isValidId(id) {
   let maybeId = Number(id);
