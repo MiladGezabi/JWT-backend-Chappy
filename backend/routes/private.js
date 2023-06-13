@@ -89,12 +89,16 @@ router.post("/", async (req, res) => {
 		let user = users.find(u => u.id === userId)
 		console.log(`User "${user.username}" has access to secret data.`)
 
-    let maybeMessage = req.body
+    let message = req.body.message
+
+    console.log(message)
+    let maybeMessage = {
+      id: generateRandomId(),
+      name: user.username,
+      message: message
+    };
 		
     if(isValidMessage(maybeMessage)) {
-      await db.read()
-      maybeMessage.id = generateRandomId()
-      maybeMessage.name = user.username
       db.data.private.push(maybeMessage)
       await db.write()
       res.send({ id: maybeMessage.id })

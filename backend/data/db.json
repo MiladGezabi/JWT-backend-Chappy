@@ -10,6 +10,10 @@
     {
       "id": "34",
       "message": "hello there"
+    },
+    {
+      "message": "testing public message",
+      "id": 244398703
     }
   ],
   "private": [
@@ -17,7 +21,11 @@
       "id": "898",
       "message": "hello",
       "name": "admin"
+    },
+    {
+      "id": 170759198,
+      "name": "admin",
+      "message": "testing private message"
     }
-   
   ]
 }

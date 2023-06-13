@@ -77,6 +77,7 @@ router.put("/:id", async (req, res) =>{
 
   
   db.data.users[originalUserIndex] = UpdatedUser
+  UpdatedUser.id = id
   await db.write()
   res.sendStatus(200)
 })
