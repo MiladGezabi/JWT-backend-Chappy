@@ -1,7 +1,7 @@
 // imports
 import express from "express"
-import { getDb } from "../data/database"
-import { generateRandomId, isValidId, isValidUser } from "../functions"
+import { getDb } from "../data/database.js"
+import { generateRandomId, isValidId, isValidUser } from "../functions.js"
 
 // konfigurations.
 const router = express.Router()

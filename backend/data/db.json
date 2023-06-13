@@ -1,16 +1,23 @@
 {
-  "users": {
-    "id": 1,
-    "username": "admin",
-    "password": "password"
-  },
-
-  "public": {
-
-  },
-
-  "private": {
-    
-  }
-  
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "password"
+    }
+  ],
+  "public": [
+    {
+      "id": "34",
+      "message": "hello there"
+    }
+  ],
+  "private": [
+    {
+      "id": "898",
+      "message": "hello",
+      "name": "admin"
+    }
+   
+  ]
 }

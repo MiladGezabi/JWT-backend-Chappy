@@ -1,6 +1,6 @@
 //imports
 import express from "express"
-import { getDb } from "../data/database"
+import { getDb } from "../data/database.js"
 import { generateRandomId, isValidMessage } from "../functions.js"
 
 // konfigurationer.

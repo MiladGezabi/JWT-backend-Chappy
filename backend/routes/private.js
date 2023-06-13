@@ -1,7 +1,9 @@
 // imports.
 import express from "express";
-import { getDb } from "../data/database";
+import { getDb } from "../data/database.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+import { isValidMessage, generateRandomId } from "../functions.js";
 
 // konfigurations
 const router = express.Router()
@@ -50,7 +52,7 @@ router.get('/', async (req, res) => {
 		})
 		return
 	}
-	let token = authHeader.replace('Bearer: ', '')
+	let token = authHeader.replace('Bearer ', '')
   await db.read()
   let users = db.data.users
 
@@ -77,7 +79,7 @@ router.post("/", async (req, res) => {
 		})
 		return
 	}
-	let token = authHeader.replace('Bearer: ', '')
+	let token = authHeader.replace('Bearer ', '')
   await db.read()
   let users = db.data.users
 
@@ -93,52 +95,19 @@ router.post("/", async (req, res) => {
       await db.read()
       maybeMessage.id = generateRandomId()
       maybeMessage.name = user.username
-      db.data.public.push(maybeMessage)
+      db.data.private.push(maybeMessage)
       await db.write()
       res.send({ id: maybeMessage.id })
     } else {
       res.sendStatus(400)
     }
 	} catch(error) {
+    console.error('Error:', error);
 		res.sendStatus(401)
 	}
 })
 
 
-router.put("/", async (req, res) => {
-  let authHeader = req.headers.authorization
-	if( !authHeader ) {
-		res.status(401).send({
-			message: 'You dont must log in to get access to this chat.'
-		})
-		return
-	}
-	let token = authHeader.replace('Bearer: ', '')
-  await db.read()
-  let users = db.data.users
-
-	try {
-		let jwtDecoded = jwt.verify(token, secret)
-		let userId = jwtDecoded.userId
-		let user = users.find(u => u.id === userId)
-		console.log(`User "${user.username}" has access to secret data.`)
-
-    let maybeMessage = req.body
-		
-    if(isValidMessage(maybeMessage)) {
-      await db.read()
-      maybeMessage.id = generateRandomId()
-      maybeMessage.name = user.username
-      db.data.public.push(maybeMessage)
-      await db.write()
-      res.send({ id: maybeMessage.id })
-    } else {
-      res.sendStatus(400)
-    }
-	} catch(error) {
-		res.sendStatus(401)
-	}
-})
 
 
 

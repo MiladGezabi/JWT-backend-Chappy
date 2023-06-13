@@ -5,14 +5,9 @@ function generateRandomId() {
 
 // funktion som kollar om medelandet är giltig.
 function isValidMessage(m) {
-  let messageIsValid = m.message !== "";
-
-  if (!messageIsValid) {
-    return false;
-  }
-
-  return true;
+  return m.message !== "";
 }
+
 
 
 // funktion som kollar om id är giltig.
