@@ -43,12 +43,15 @@ router.post("/login", async (req, res) => {
   res.send(tokenPackage)
 } )
 
-// Get kollar om man är inloggad och hämtar all medelanden från privata kanalen.
-router.get('/', async (req, res) => {
+// -------------------------------------------------------
+
+// routs för Koda kanalen.
+// Get kollar om man är inloggad och hämtar alla medelanden i Koda Kanalen.
+router.get('/koda', async (req, res) => {
 	let authHeader = req.headers.authorization
 	if( !authHeader ) {
 		res.status(401).send({
-			message: 'You dont must log in to get access to this chat.'
+			message: 'You must log in to get access to this chat.'
 		})
 		return
 	}
@@ -62,16 +65,16 @@ router.get('/', async (req, res) => {
 		let user = users.find(u => u.id === userId)
 		console.log(`User "${user.username}" has access to secret data.`)
 		
-		
-		res.send(db.data.private)
+		const kodaChannel = db.data.private.find(channel => channel.title === "Koda")
+		res.send(kodaChannel.messages)
 
 	} catch(error) {
 		res.sendStatus(401)
 	}
 })
 
-// Post Kollar om det är rätt user och rätt body sedan läggs medelande till private i data basen med två nya egenskaper som är name och id.
-router.post("/", async (req, res) => {
+// Post Kollar om det är rätt user och rätt body sedan läggs medelande till Koda kanalen i databasen med två nya egenskaper som är name och id.
+router.post("/koda", async (req, res) => {
   let authHeader = req.headers.authorization
 	if( !authHeader ) {
 		res.status(401).send({
@@ -87,7 +90,7 @@ router.post("/", async (req, res) => {
 		let jwtDecoded = jwt.verify(token, secret)
 		let userId = jwtDecoded.userId
 		let user = users.find(u => u.id === userId)
-		console.log(`User "${user.username}" has access to secret data.`)
+		console.log(`User "${user.username}" has access to private chat.`)
 
     let message = req.body.message
 
@@ -99,7 +102,8 @@ router.post("/", async (req, res) => {
     };
 		
     if(isValidMessage(maybeMessage)) {
-      db.data.private.push(maybeMessage)
+      const kodaChannel = db.data.private.find(channel => channel.title === "Koda")
+      kodaChannel.messages.push(maybeMessage)
       await db.write()
       res.send({ id: maybeMessage.id })
     } else {
@@ -112,6 +116,80 @@ router.post("/", async (req, res) => {
 })
 
 
+// ----------------------------------------------------------
+
+// routes för Aktier kanalen.
+
+// Get kollar om man är inloggad och hämtar alla medelanden i Aktier Kanalen.
+
+router.get('/aktier', async (req, res) => {
+	let authHeader = req.headers.authorization
+	if( !authHeader ) {
+		res.status(401).send({
+			message: 'You must log in to get access to this chat.'
+		})
+		return
+	}
+	let token = authHeader.replace('Bearer ', '')
+  await db.read()
+  let users = db.data.users
+
+	try {
+		let jwtDecoded = jwt.verify(token, secret)
+		let userId = jwtDecoded.userId
+		let user = users.find(u => u.id === userId)
+		console.log(`User "${user.username}" has access to private chat.`)
+		
+		const aktierChannel = db.data.private.find(channel => channel.title === "Aktier")
+		res.send(aktierChannel.messages)
+
+	} catch(error) {
+		res.sendStatus(401)
+	}
+})
+
+
+// Post Kollar om det är rätt user och rätt body sedan läggs medelande till Aktier kanalen i databasen med två nya egenskaper som är name och id.
+router.post("/aktier", async (req, res) => {
+  let authHeader = req.headers.authorization
+	if( !authHeader ) {
+		res.status(401).send({
+			message: 'You dont must log in to get access to this chat.'
+		})
+		return
+	}
+	let token = authHeader.replace('Bearer ', '')
+  await db.read()
+  let users = db.data.users
+
+	try {
+		let jwtDecoded = jwt.verify(token, secret)
+		let userId = jwtDecoded.userId
+		let user = users.find(u => u.id === userId)
+		console.log(`User "${user.username}" has access to private chat.`)
+
+    let message = req.body.message
+
+    console.log(message)
+    let maybeMessage = {
+      id: generateRandomId(),
+      name: user.username,
+      message: message
+    };
+		
+    if(isValidMessage(maybeMessage)) {
+      const aktierChannel = db.data.private.find(channel => channel.title === "Aktier")
+      aktierChannel.messages.push(maybeMessage)
+      await db.write()
+      res.send({ id: maybeMessage.id })
+    } else {
+      res.sendStatus(400)
+    }
+	} catch(error) {
+    console.error('Error:', error);
+		res.sendStatus(401)
+	}
+})
 
 
 

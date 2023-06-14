@@ -8,24 +8,66 @@
   ],
   "public": [
     {
-      "id": "34",
-      "message": "hello there"
+      "title": "Allmänt",
+      "messages": [
+        {
+          "id": 84,
+          "message": "Välkommen till Allmänt kanalen",
+          "name": "admin"
+        },
+        {
+          "message": "testing public message",
+          "name": "guest",
+          "id": 333599805
+        }
+      ]
     },
     {
-      "message": "testing public message",
-      "id": 244398703
+      "title": "Random",
+      "messages": [
+        {
+          "id": 739,
+          "message": "Välkommen till Random kanalen",
+          "name": "admin"
+        },
+        {
+          "message": "testing random message",
+          "name": "guest",
+          "id": 722840763
+        }
+      ]
     }
   ],
   "private": [
     {
-      "id": "898",
-      "message": "hello",
-      "name": "admin"
+      "title": "Koda",
+      "messages": [
+        {
+          "id": 98,
+          "message": "Välkommen till Koda Kanalen",
+          "name": "admin"
+        },
+        {
+          "id": 774831400,
+          "name": "admin",
+          "message": "testing koda message"
+        }
+      ]
     },
     {
-      "id": 170759198,
-      "name": "admin",
-      "message": "testing private message"
+      "title": "Aktier",
+      "messages": [
+        {
+          "id": 89809,
+          "message": "Välkommen till Aktier kanalen",
+          "name": "admin"
+        },
+        {
+          "id": 685606792,
+          "name": "admin",
+          "message": "testing aktier message"
+        }
+      ]
     }
   ]
 }

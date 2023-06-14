@@ -8,6 +8,14 @@ function isValidMessage(m) {
   return m.message !== "";
 }
 
+function isValidMessagePublic(m) {
+  let message = m.message !== "";
+  let name = m.name !== "";
+  
+  return message && name;
+}
+
+
 
 
 // funktion som kollar om id är giltig.
@@ -40,4 +48,4 @@ function isValidUser(u) {
   return true;
 }
 
-export { generateRandomId, isValidMessage, isValidId, isValidUser };
+export { generateRandomId, isValidMessage, isValidId, isValidUser, isValidMessagePublic };

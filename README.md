@@ -21,6 +21,7 @@ Detta är ett api som kan användas för att bygga en chatt app. Den innehåller
 |   Delete   | /api/users |      /:id      |                    | Tar bort en specific user       |
 
 #### exempel på hur en lista av user kan ser ut.
+```
 [
   {
     "id": 1,
@@ -33,6 +34,7 @@ Detta är ett api som kan användas för att bygga en chatt app. Den innehåller
     "password": "password1"
   }
 ]
+```
 
 
 ## Public endpoint
