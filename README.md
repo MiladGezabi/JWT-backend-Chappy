@@ -1,16 +1,16 @@
 # Chappy Chatt Api
-Detta är ett api som kan användas för att bygga en chatt app. Den innehåller 3 endpoints och nedan beskriver jag vad de gör samt datamodelering.
+Detta är ett api som kan användas för att bygga en chatt app. Den innehåller 3 endpoints: users, public och private. public har två kannaler: Allmänt och Random. private har två kannaler: Koda och Aktier. nedan beskriver jag vad de gör samt datamodelering.
 
 ## Users endpoint
 
-### Datamodelering av users
+### Datamodelering av users endpoint.
 | **Egenskaper** | **Datatyp** | **Beskrivning**      |
 |----------------|-------------|----------------------|
 |    username    |   "String"  | Användarens namn     |
 |    password    |   "String"  | Användarens lösenord |
 |       id       |    Number   |     Ett unikt id     |
 
-### user beskrivning
+### users beskrivning
 
 | **Method** | **URL**    | **URL Params** | **Body**           | **Response**                    |
 |:----------:|------------|----------------|--------------------|---------------------------------|
@@ -39,30 +39,41 @@ Detta är ett api som kan användas för att bygga en chatt app. Den innehåller
 
 ## Public endpoint
 
-### Datamodelering av public
-| **Egenskaper** | **Datatyp** | **Beskrivning** |
-|----------------|-------------|-----------------|
-|     message    |   "String"  | Ett medelande   |
-|       id       |    number   | Ett unikt id    |
+### Datamodelering av public endpoint
+| **Egenskaper** | **Datatyp** |              **Beskrivning**             |
+|:--------------:|:-----------:|:----------------------------------------:|
+|       id       |    number   |               Ett unikt id               |
+|     message    |   "string"  |           Ett sträng medelande           |
+|      name      |   "string"  | namn på personen som skrivit medelandet. |
 
-### public beskrivning
+#### exempel på hur en lista i public kannalerna kan se ut.
+```
+"messages": [
+        {
+          "id": 84,
+          "message": "Välkommen till Allmänt kanalen",
+          "name": "admin"
+        },
+        {
+          "message": "testing public message",
+          "name": "guest",
+          "id": 333599805
+        }
+      ]
+```
+### public: allmänt kannalen beskrivning
 
-| **Method** |   **URL**   | **URL Params** | **Body** | **Response**                       |
-|:----------:|:-----------:|:--------------:|----------|------------------------------------|
-|     Get    | /api/public |                |          | Lista med all medelanden i public  |
-|    Post    | /api/public |                | message  | Lägger till ett medelande i public |
+| **Method** |       **URL**       | **URL Params** |          **Body**         |                        **Response**                       |
+|:----------:|:-------------------:|:--------------:|:-------------------------:|:---------------------------------------------------------:|
+|     Get    | /api/public/allmant |                |                           | Returnerar  en lista av medelanden från allmänt kannalen. |
+|    Post    | /api/public/allmant |                | "message": "", "name": "" |       Skickar ett  medelande till allmänt kannalen.       |
 
-#### exempel på hur en lista med public medelande kan se ut.
-[
-  {
-    "id": 847,
-    "message": "hej"
-  },
-  {
-    "id": 9589,
-    "message": "hejsan"
-  }
-]
+
+### public: random kannalen beskrivning
+| **Method** |       **URL**      | **URL Params** |          **Body**         |                       **Response**                       |
+|:----------:|:------------------:|:--------------:|:-------------------------:|:--------------------------------------------------------:|
+|     Get    | /api/public/random |                |                           | Returnerar  en lista av medelanden från random kannalen. |
+|    Post    | /api/public/random |                | "message": "", "name": "" |       Skickar ett  medelande till random kannalen.       |
 
 ## Private endpoint
 
@@ -73,15 +84,8 @@ Detta är ett api som kan användas för att bygga en chatt app. Den innehåller
 |       id       |    number   |               Ett unikt id              |
 |      name      |   "string"  | namn på user som har skrivit medelandet |
 
-### private beskrivning
-
-| **Method** |       **URL**      | **URL Params** |      **Body**      | **Header**                      |                              **Response**                             |
-|:----------:|:------------------:|:--------------:|:------------------:|---------------------------------|:---------------------------------------------------------------------:|
-|    Post    | /api/private/login |                | username, password |                                 | Får tillbaka ett  jason web token som kan användas  upp till 1 timme. |
-|     Get    |    /api/private    |                |                    | Authorization, Bearer {din jwt} |                 Lista med alla  medelanden  i private.                |
-|    Post    |    /api/private    |                |       message      | Authorization, Bearer {din jwt} |                 Lägger till ett  medelande  i private.                |
-
 #### exempel på hur en lista med privata medelande kan se ut.
+```
 [
   {
     "id": 9485,
@@ -94,3 +98,17 @@ Detta är ett api som kan användas för att bygga en chatt app. Den innehåller
     "message": "Jag är hungrig"
   }
 ]
+```
+
+### private: koda kannalen beskrivning
+
+| **Method** | **URL**           | **URL Params** | **Body**      | **Header**                  | **Response**                                          |
+|------------|-------------------|----------------|---------------|-----------------------------|-------------------------------------------------------|
+|     Get    | /api/private/koda |                |               | Authorization, Bearer [jwt] | Returnerar en lista av medelanden från koda kannalen. |
+|    Post    | /api/private/koda |                | "message": "" | Authorization, Bearer [jwt] |       Skickar ett Medelande till koda kannalen.       |
+
+### private: Aktier kannalen beskrivning
+| **Method** | **URL**             | **URL Params** | **Body**      | **Header**                  | **Response**                                            |
+|------------|---------------------|----------------|---------------|-----------------------------|---------------------------------------------------------|
+|     Get    | /api/private/aktier |                |               | Authorization, Bearer [jwt] | Returnerar en lista av medelanden från aktier kannalen. |
+|    Post    | /api/private/aktier |                | "message": "" | Authorization, Bearer [jwt] |       Skickar ett Medelande till aktier kannalen.       |
